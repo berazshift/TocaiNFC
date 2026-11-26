@@ -69,7 +69,7 @@ function SettingsForm({ state }: { state: State }) {
 
       <Panel title="Estoque">
         <div className="grid gap-4 sm:grid-cols-3">
-          <Field label="Placas compradas no total" hint="Some aqui sempre que repor."><NumberInput step="1" value={s.stock} onChange={(stock) => set({ stock })} /></Field>
+          <div className="text-sm"><div className="font-medium">Placas compradas no total</div><div className="num mt-1.5 text-2xl font-semibold">{s.stock}</div><div className="text-xs text-muted-foreground">Registre novas reposições em Custos → Comprar placas para atualizar estoque e caixa juntos.</div></div>
           <Field label="Avisar quando restarem"><NumberInput step="1" value={s.lowStock} onChange={(lowStock) => set({ lowStock })} /></Field>
           <div className="text-sm">
             <div className="font-medium">Disponível agora</div>
