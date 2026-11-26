@@ -14,9 +14,9 @@ import { EMPTY, normalize, replaceAll, saveSettings, useData, type Settings, typ
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — Tocaai" },
+      { title: "Configurações — NFC Sales Hub" },
       { name: "description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
-      { property: "og:title", content: "Configurações — Tocaai" },
+      { property: "og:title", content: "Configurações — NFC Sales Hub" },
       { property: "og:description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
     ],
   }),
@@ -45,7 +45,7 @@ function SettingsForm({ state }: { state: State }) {
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    saveSettings({ ...s, businessName: s.businessName.trim() || "Tocaai" });
+    saveSettings({ ...s, businessName: s.businessName.trim() || "Meu negócio" });
     toast.success("Configurações salvas.");
   };
 
@@ -97,7 +97,7 @@ function Backup({ state }: { state: State }) {
     const url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `tocaai-${todayISO()}.json`;
+    a.download = `nfc-sales-hub-${todayISO()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -112,7 +112,7 @@ function Backup({ state }: { state: State }) {
       replaceAll(normalize(parsed));
       toast.success("Cópia restaurada.");
     } catch {
-      toast.error("Esse arquivo não é uma cópia do Tocaai.");
+      toast.error("Esse arquivo não é uma cópia do NFC Sales Hub.");
     }
   };
 
