@@ -19,4 +19,9 @@ describe("App routing", () => {
 
     expect(router.matchRoutes("/simulador").at(-1)?.routeId).toBe("/simulador");
   });
+  it("matches the new-password page at /reset-password", () => {
+    const router = createRouter({ routeTree, context: { queryClient: new QueryClient() } });
+
+    expect(router.matchRoutes("/reset-password").at(-1)?.routeId).toBe("/reset-password");
+  });
 });

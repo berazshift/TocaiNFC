@@ -31,5 +31,5 @@ use the editor.
 
 ## Project rules
 
-- All app data lives in the browser (localStorage) behind `src/lib/store.ts`; pages read it with `useData()` and render a skeleton until hydrated. Why: the user chose no login, so there is no per-user backend data.
+- App data is one state object behind `src/lib/store.ts` (localStorage as the device cache); `src/components/cloud-sync-gate.tsx` requires sign-in, loads and saves that object per account, and wraps every page except `/reset-password`. Pages read it with `useData()`. Why: each account must see only its own data on any device, without rewriting the pages.
 - Business math (revenue, profit, goals, stock) lives in `src/lib/calc.ts` as pure functions with tests. Why: every page must show the same numbers.

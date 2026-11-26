@@ -1,12 +1,17 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
-import { Cloud, LoaderCircle, LogOut, Mail } from "lucide-react";
+import { Cloud, LoaderCircle, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { replaceAll, useData } from "@/lib/store";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { EMPTY, replaceAll, useData } from "@/lib/store";
+import { startsEmpty } from "@/lib/account";
+import { AuthScreen } from "@/components/auth-screen";
 
 const db = supabase as any;
+
+// Remembers which account the data on this device belongs to.
+const OWNER_KEY = "tocainfc:conta";
+const readOwner = () => { try { return window.localStorage.getItem(OWNER_KEY); } catch { return null; } };
+const writeOwner = (id: string) => { try { window.localStorage.setItem(OWNER_KEY, id); } catch { /* storage unavailable */ } };
 
 export function CloudSyncGate({ children }: { children: ReactNode }) {
   const { state } = useData();
@@ -14,8 +19,6 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
   const [checking, setChecking] = useState(true);
   const [hydrated, setHydrated] = useState(false);
   const [canSync, setCanSync] = useState(false);
-  const [email, setEmail] = useState("");
-  const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
   const [syncState, setSyncState] = useState<"synced" | "saving" | "offline">("synced");
 
@@ -61,9 +64,12 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
       if (data?.payload && typeof data.payload === "object") {
         replaceAll(data.payload);
       } else {
+        // A new account must not inherit data another account left on this device.
+        const fresh = startsEmpty(readOwner(), session.user.id);
+        if (fresh) replaceAll(EMPTY);
         const { error: saveError } = await db.from("tocainfc_user_data").upsert({
           user_id: session.user.id,
-          payload: state,
+          payload: fresh ? EMPTY : state,
           updated_at: new Date().toISOString(),
         }, { onConflict: "user_id" });
         if (saveError) {
@@ -75,6 +81,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
         }
       }
       if (!cancelled) {
+        writeOwner(session.user.id);
         if (data?.payload && typeof data.payload === "object") setCanSync(true);
         setHydrated(true);
       }
@@ -98,41 +105,11 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, [state, session?.user.id, hydrated, canSync]);
 
-  const sendMagicLink = async (event: FormEvent) => {
-    event.preventDefault();
-    if (!email.trim()) return;
-    setSending(true);
-    setMessage("");
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: window.location.origin },
-    });
-    setSending(false);
-    setMessage(error ? error.message : "Enviamos um link de acesso para seu e-mail. Abra-o neste dispositivo para entrar.");
-  };
-
   if (checking || (session && !hydrated)) {
     return <div className="flex min-h-screen items-center justify-center gap-3 bg-background text-sm text-muted-foreground"><LoaderCircle className="size-5 animate-spin" /> {checking ? "Verificando acesso..." : "Carregando seus dados..."}</div>;
   }
 
-  if (!session) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-background px-4 py-10">
-        <section className="w-full max-w-md rounded-2xl border bg-card p-7 shadow-sm">
-          <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary"><Cloud className="size-6" /></div>
-          <h1 className="text-2xl font-semibold tracking-tight">Acesse seu TocaiNFC</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Entre com seu e-mail para salvar e sincronizar vendas, clientes, estoque e configurações na nuvem.</p>
-          <form onSubmit={sendMagicLink} className="mt-6 grid gap-3">
-            <label htmlFor="tocainfc-email" className="text-sm font-medium">E-mail</label>
-            <Input id="tocainfc-email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="voce@exemplo.com" />
-            <Button type="submit" disabled={sending}>{sending ? <LoaderCircle className="size-4 animate-spin" /> : <Mail className="size-4" />} Enviar link de acesso</Button>
-          </form>
-          {message ? <p role="status" className="mt-4 text-sm text-muted-foreground">{message}</p> : null}
-          <p className="mt-5 text-xs text-muted-foreground">Não precisa criar senha. Enviaremos um link seguro para seu e-mail.</p>
-        </section>
-      </main>
-    );
-  }
+  if (!session) return <AuthScreen />;
 
   return (
     <>

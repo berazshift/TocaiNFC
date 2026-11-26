@@ -14,6 +14,7 @@ import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as CustosRouteImport } from './routes/custos'
 import { Route as MetasRouteImport } from './routes/metas'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SimuladorRouteImport } from './routes/simulador'
 import { Route as VendasRouteImport } from './routes/vendas'
 
@@ -42,6 +43,11 @@ const MetasRoute = MetasRouteImport.update({
   path: '/metas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SimuladorRoute = SimuladorRouteImport.update({
   id: '/simulador',
   path: '/simulador',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/custos'
     | '/metas'
+    | '/reset-password'
     | '/simulador'
     | '/vendas'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/custos'
     | '/metas'
+    | '/reset-password'
     | '/simulador'
     | '/vendas'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/custos'
     | '/metas'
+    | '/reset-password'
     | '/simulador'
     | '/vendas'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   CustosRoute: typeof CustosRoute
   MetasRoute: typeof MetasRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SimuladorRoute: typeof SimuladorRoute
   VendasRoute: typeof VendasRoute
 }
@@ -158,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/simulador': {
       id: '/simulador'
       path: '/simulador'
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracoesRoute: ConfiguracoesRoute,
   CustosRoute: CustosRoute,
   MetasRoute: MetasRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SimuladorRoute: SimuladorRoute,
   VendasRoute: VendasRoute,
 }

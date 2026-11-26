@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -136,15 +137,19 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // The new-password page is reached from an e-mail link and must open without the sign-in gate.
+  const standalone = useRouterState({ select: (s) => s.location.pathname.replace(/\/+$/, "") === "/reset-password" });
 
   return (
     <QueryClientProvider client={queryClient}>
+      {standalone ? <Outlet /> : (
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <CloudSyncGate>
         <AppShell>
           <Outlet />
         </AppShell>
       </CloudSyncGate>
+      )}
       <Toaster position="top-center" />
     </QueryClientProvider>
   );
