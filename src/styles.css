@@ -275,3 +275,23 @@
     font-size: 12px;
   }
 }
+
+
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px !important;
+  }
+
+  button,
+  [role="button"] {
+    min-height: 44px;
+  }
+
+  button[data-size="icon"] {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
