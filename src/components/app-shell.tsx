@@ -51,7 +51,7 @@ function AppSidebar() {
             <Nfc className="size-5" strokeWidth={2.2} />
           </span>
           <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <div className="truncate text-base font-bold leading-tight tracking-tight text-white">NFC <span className="text-sidebar-primary">Sales</span></div>
+            <div className="truncate text-base font-bold leading-tight tracking-tight text-white">Tocai<span className="text-sidebar-primary">NFC</span></div>
             <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/45">Sales workspace</div>
           </div>
         </div>
@@ -129,7 +129,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               <SidebarTrigger aria-label="Abrir ou fechar o menu" className="rounded-lg" />
               <div className="hidden h-7 w-px bg-border sm:block" />
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold tracking-tight">{pageNames[path] ?? "NFC Sales Hub"}</p>
+                <p className="truncate text-sm font-semibold tracking-tight">{pageNames[path] ?? "TocaiNFC"}</p>
                 <p className="hidden text-[11px] text-muted-foreground sm:block">Central de gestão comercial</p>
               </div>
             </div>
@@ -146,7 +146,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </header>
           <main className="mx-auto w-full max-w-[1480px] flex-1 px-4 py-6 pb-28 md:px-8 md:py-8 md:pb-8 xl:px-10">{children}</main>
           <footer className="hidden flex-wrap items-center justify-between gap-2 border-t border-border/70 px-6 py-4 text-[11px] text-muted-foreground md:flex md:px-10">
-            <span>NFC Sales Hub <span className="text-border">·</span> Gestão comercial</span>
+            <span>TocaiNFC <span className="text-border">·</span> Gestão comercial</span>
             <span>Organização para vender melhor, todos os dias.</span>
           </footer>
         </div>
