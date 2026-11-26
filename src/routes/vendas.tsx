@@ -102,7 +102,7 @@ function SalesPage() {
             <Button onClick={open}><Plus /> Nova venda</Button>
           </EmptyState>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[640px] text-sm">
               <thead className="text-left text-xs text-muted-foreground">
                 <tr className="border-b">
