@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "../components/app-shell";
+import { CloudSyncGate } from "../components/cloud-sync-gate";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -139,9 +140,11 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <AppShell>
-        <Outlet />
-      </AppShell>
+      <CloudSyncGate>
+        <AppShell>
+          <Outlet />
+        </AppShell>
+      </CloudSyncGate>
       <Toaster position="top-center" />
     </QueryClientProvider>
   );
