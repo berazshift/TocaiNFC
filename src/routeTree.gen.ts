@@ -14,6 +14,7 @@ import { Route as ClientesRouteImport } from './routes/clientes'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as CustosRouteImport } from './routes/custos'
 import { Route as MetasRouteImport } from './routes/metas'
+import { Route as SimuladorRouteImport } from './routes/simulador'
 import { Route as VendasRouteImport } from './routes/vendas'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const MetasRoute = MetasRouteImport.update({
   path: '/metas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SimuladorRoute = SimuladorRouteImport.update({
+  id: '/simulador',
+  path: '/simulador',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VendasRoute = VendasRouteImport.update({
   id: '/vendas',
   path: '/vendas',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
 export interface FileRoutesById {
@@ -70,14 +78,28 @@ export interface FileRoutesById {
   '/configuracoes': typeof ConfiguracoesRoute
   '/custos': typeof CustosRoute
   '/metas': typeof MetasRoute
+  '/simulador': typeof SimuladorRoute
   '/vendas': typeof VendasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/clientes' | '/configuracoes' | '/custos' | '/metas' | '/vendas'
+    | '/'
+    | '/clientes'
+    | '/configuracoes'
+    | '/custos'
+    | '/metas'
+    | '/simulador'
+    | '/vendas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/clientes' | '/configuracoes' | '/custos' | '/metas' | '/vendas'
+  to:
+    | '/'
+    | '/clientes'
+    | '/configuracoes'
+    | '/custos'
+    | '/metas'
+    | '/simulador'
+    | '/vendas'
   id:
     | '__root__'
     | '/'
@@ -85,6 +107,7 @@ export interface FileRouteTypes {
     | '/configuracoes'
     | '/custos'
     | '/metas'
+    | '/simulador'
     | '/vendas'
   fileRoutesById: FileRoutesById
 }
@@ -94,6 +117,7 @@ export interface RootRouteChildren {
   ConfiguracoesRoute: typeof ConfiguracoesRoute
   CustosRoute: typeof CustosRoute
   MetasRoute: typeof MetasRoute
+  SimuladorRoute: typeof SimuladorRoute
   VendasRoute: typeof VendasRoute
 }
 
@@ -134,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/simulador': {
+      id: '/simulador'
+      path: '/simulador'
+      fullPath: '/simulador'
+      preLoaderRoute: typeof SimuladorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vendas': {
       id: '/vendas'
       path: '/vendas'
@@ -150,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiguracoesRoute: ConfiguracoesRoute,
   CustosRoute: CustosRoute,
   MetasRoute: MetasRoute,
+  SimuladorRoute: SimuladorRoute,
   VendasRoute: VendasRoute,
 }
 export const routeTree = rootRouteImport

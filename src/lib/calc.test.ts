@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { availableStock, monthSummary } from "./calc";
+import { availableStock, monthSummary, simulateSale } from "./calc";
 import { EMPTY, normalize, type Sale, type State } from "./store";
 const sale = (over: Partial<Sale>): Sale => ({
   id: "s", date: "2026-11-10", clientId: "", quantity: 1, unitPrice: 100, unitCost: 40,
@@ -51,5 +51,29 @@ describe("normalização de dados importados", () => {
   it("aceita arquivo vazio ou malformado sem exceção", () => {
     expect(normalize(null)).toEqual(EMPTY);
     expect(normalize({ sales: "inválido", clients: {}, costs: null, goals: 4 }).sales).toEqual([]);
+  });
+});
+describe("simulador de vendas", () => {
+  it("calcula faturamento, custos, lucro e margem do cenário", () => {
+    const r = simulateSale({ quantity: 10, unitPrice: 100, unitCost: 40, feePercent: 5, extraExpenses: 50 });
+    expect(r.revenue).toBe(1000); expect(r.unitsCost).toBe(400); expect(r.fees).toBe(50);
+    expect(r.extraExpenses).toBe(50); expect(r.profit).toBe(500); expect(r.margin).toBe(50);
+    expect(r.averagePrice).toBe(100); expect(r.units).toBe(10); expect(r.profitPerUnit).toBe(50);
+    expect(r.breakEvenUnits).toBe(1);
+  });
+  it("usa quantidade inteira positiva e nunca valores negativos ou NaN", () => {
+    const r = simulateSale({ quantity: -3.7, unitPrice: Number.NaN, unitCost: -20, feePercent: 250, extraExpenses: -5 });
+    expect(r.units).toBe(1); expect(r.revenue).toBe(0); expect(r.unitsCost).toBe(0); expect(r.fees).toBe(0);
+    expect(r.extraExpenses).toBe(0); expect(r.profit).toBe(0); expect(r.margin).toBe(0); expect(r.feePercent).toBe(100);
+    expect(simulateSale({ quantity: 2.9, unitPrice: 10, unitCost: 0, feePercent: 0, extraExpenses: 0 }).units).toBe(2);
+  });
+  it("mostra prejuízo quando o custo passa do preço, sem ponto de equilíbrio", () => {
+    const r = simulateSale({ quantity: 5, unitPrice: 30, unitCost: 40, feePercent: 0, extraExpenses: 0 });
+    expect(r.profit).toBe(-50); expect(r.breakEvenUnits).toBeNull();
+  });
+  it("não altera o fechamento mensal, que desconta todas as placas compradas no mês", () => {
+    const before = monthSummary(state, "2026-11");
+    simulateSale({ quantity: 100, unitPrice: 100, unitCost: 40, feePercent: 10, extraExpenses: 0 });
+    expect(monthSummary(state, "2026-11")).toEqual(before); expect(before.productCost).toBe(400);
   });
 });

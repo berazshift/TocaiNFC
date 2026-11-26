@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowUpRight, BarChart3, CalendarDays, LayoutDashboard, Nfc, Plus, Receipt, Settings, Target, Users, Wallet } from "lucide-react";
+import { ArrowUpRight, BarChart3, Calculator, CalendarDays, LayoutDashboard, Nfc, Plus, Receipt, Settings, Target, Users, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +23,7 @@ const items = [
   { title: "Vendas", to: "/vendas", icon: Receipt },
   { title: "Clientes", to: "/clientes", icon: Users },
   { title: "Metas", to: "/metas", icon: Target },
+  { title: "Simulador de vendas", to: "/simulador", icon: Calculator },
   { title: "Custos", to: "/custos", icon: Wallet },
   { title: "Configurações", to: "/configuracoes", icon: Settings },
 ] as const;
@@ -33,6 +34,7 @@ const pageNames: Record<string, string> = {
   "/vendas": "Vendas",
   "/clientes": "Clientes",
   "/metas": "Metas",
+  "/simulador": "Simulador de vendas",
   "/custos": "Custos",
   "/configuracoes": "Configurações",
 };

@@ -37,14 +37,15 @@ const KEY = "tocaai:dados:v1";
 let state: State = EMPTY;
 let loaded = false;
 const listeners = new Set<() => void>();
-type UnknownRecord = Record<string, unknown>;
+type RawKey = keyof State | keyof Settings | keyof Client | keyof Sale | keyof Cost | keyof StockPurchase | keyof Goal;
+type UnknownRecord = Partial<Record<RawKey, unknown>>;
 const isRecord = (value: unknown): value is UnknownRecord =>
   value !== null && typeof value === "object" && !Array.isArray(value);
 const text = (value: unknown, fallback = "") => typeof value === "string" ? value : fallback;
 const number = (value: unknown, fallback = 0) =>
   typeof value === "number" && Number.isFinite(value) ? value : fallback;
-const validDate = (value: unknown) => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
-const validMonth = (value: unknown) => typeof value === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
+const validDate = (value: unknown): value is string => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+const validMonth = (value: unknown): value is string => typeof value === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
 
 export function normalize(value: unknown): State {
   const source = isRecord(value) ? value : {};

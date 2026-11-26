@@ -87,3 +87,37 @@ export function topClients(state: State, month: string) {
   }
   return [...map.entries()].map(([id, v]) => ({ id, name: state.clients.find((c) => c.id === id)?.name ?? "Cliente removido", ...v })).sort((a, b) => b.revenue - a.revenue);
 }
+export interface SaleSimulationInput { quantity: number; unitPrice: number; unitCost: number; feePercent: number; extraExpenses: number; }
+export interface SaleSimulation {
+  units: number; unitPrice: number; unitCost: number; feePercent: number;
+  revenue: number; unitsCost: number; fees: number; extraExpenses: number; totalCosts: number;
+  profit: number; margin: number; averagePrice: number; profitPerUnit: number;
+  /** Placas necessárias para cobrir as despesas extras; null quando cada placa não deixa sobra. */
+  breakEvenUnits: number | null;
+}
+const nonNegative = (n: number) => Number.isFinite(n) && n > 0 ? n : 0;
+/**
+ * Projeção de um cenário de venda. Não lê nem altera vendas, estoque ou o fechamento mensal:
+ * aqui o custo é uma estimativa só das unidades simuladas, enquanto o resultado real do mês
+ * (monthSummary) desconta todas as placas compradas no mês.
+ */
+export function simulateSale(input: SaleSimulationInput): SaleSimulation {
+  const units = Math.max(1, Math.floor(nonNegative(input.quantity)));
+  const unitPrice = nonNegative(input.unitPrice);
+  const unitCost = nonNegative(input.unitCost);
+  const feePercent = Math.min(100, nonNegative(input.feePercent));
+  const extraExpenses = nonNegative(input.extraExpenses);
+  const revenue = units * unitPrice;
+  const unitsCost = units * unitCost;
+  const fees = revenue * feePercent / 100;
+  const totalCosts = unitsCost + fees + extraExpenses;
+  const profit = revenue - totalCosts;
+  const perUnit = unitPrice * (1 - feePercent / 100) - unitCost;
+  return {
+    units, unitPrice, unitCost, feePercent, revenue, unitsCost, fees, extraExpenses, totalCosts, profit,
+    margin: revenue > 0 ? profit / revenue * 100 : 0,
+    averagePrice: revenue / units,
+    profitPerUnit: profit / units,
+    breakEvenUnits: perUnit > 0 ? Math.max(1, Math.ceil(extraExpenses / perUnit)) : null,
+  };
+}
