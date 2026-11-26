@@ -24,7 +24,7 @@ export const Route = createFileRoute("/reset-password")({
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
-  const [status, setStatus] = useState<"checking" | "ready" | "invalid">("checking");
+  const [status, setStatus] = useState<"checking" | "ready" | "invalid" | "done">("checking");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [saving, setSaving] = useState(false);
@@ -51,8 +51,8 @@ function ResetPasswordPage() {
     const { error: updateError } = await supabase.auth.updateUser({ password });
     setSaving(false);
     if (updateError) { setError(updateError.message); return; }
-    toast.success("Senha alterada. Você já está dentro da sua conta.");
-    void navigate({ to: "/", replace: true });
+    toast.success("Senha criada com sucesso.");
+    setStatus("done");
   };
 
   return (
@@ -67,6 +67,11 @@ function ResetPasswordPage() {
             <p className="mt-2 text-sm text-muted-foreground">Este link é inválido ou já expirou. Peça um novo em "Esqueci a senha" na tela de entrada.</p>
             <Button asChild className="mt-6 w-full"><Link to="/">Voltar para a entrada</Link></Button>
           </>
+        ) : status === "done" ? (
+          <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+            <p className="font-medium text-foreground">Sua senha foi criada!</p>
+            <p>Agora volte à tela inicial do iPhone e abra o TocaiNFC pelo ícone instalado. Entre com seu e-mail e a senha que acabou de criar. Depois disso, a sessão ficará salva neste aplicativo e você não precisará abrir links do e-mail a cada acesso.</p>
+          </div>
         ) : (
           <form onSubmit={submit} className="mt-6 grid gap-3">
             <div className="grid gap-1.5">
