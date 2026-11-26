@@ -145,6 +145,19 @@ function SalesPage() {
               </tbody>
             </table>
           </div>
+
+          <div className="grid gap-3 p-3 md:hidden">
+            {rows.map((s) => (
+              <article key={s.id} className="rounded-xl border border-border/80 bg-card p-3">
+                <div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="text-xs text-muted-foreground">{dateLabel(s.date)}</p><p className="mt-1 truncate text-sm font-semibold">{clientName(s.clientId)}</p></div><Pill tone={statusTone[s.status]}>{statusLabel[s.status]}</Pill></div>
+                <div className="mt-3 flex items-end justify-between gap-3"><p className="min-w-0 text-xs text-muted-foreground">{s.quantity} placas · {s.payment}{s.status === "pendente" && s.dueDate ? ` · vence ${dateLabel(s.dueDate)}` : ""}</p><strong className="num shrink-0 text-base">{brl(saleTotal(s))}</strong></div>
+                <div className="mt-3 flex justify-end gap-1 border-t pt-2">
+                  {s.status === "pendente" ? <Button variant="ghost" size="sm" className="text-success" onClick={() => { saveItem("sales", { ...s, status: "pago" }); toast.success("Pagamento registrado."); }}><Check /> Recebi</Button> : null}
+                  <Button variant="ghost" size="sm" onClick={() => setForm(s)}><Pencil /> Editar</Button><ConfirmDelete what="esta venda" onConfirm={() => removeItem("sales", s.id)} />
+                </div>
+              </article>
+            ))}
+          </div>
         )}
       </div>
 
