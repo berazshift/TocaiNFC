@@ -102,6 +102,7 @@ function CostsPage() {
               <Button onClick={open}><Plus /> Novo custo</Button>
             </EmptyState>
           ) : (
+            <>
             <div className="hidden overflow-x-auto md:block">
               <table className="w-full min-w-[480px] text-sm">
                 <thead className="text-left text-xs text-muted-foreground">
@@ -138,6 +139,7 @@ function CostsPage() {
                   <div className="mt-2 flex justify-end gap-1 border-t pt-2"><Button variant="ghost" size="sm" onClick={() => setForm(c)}><Pencil /> Editar</Button><ConfirmDelete what="este custo" onConfirm={() => removeItem("costs", c.id)} /></div>
                 </article>)}
               </div>
+            </>
           )}
         </div>
       </div>
