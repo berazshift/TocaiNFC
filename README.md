@@ -1,4 +1,4 @@
-# NFC Sales Hub
+# TocaiNFC
 
 quero que vc faça um sistema com um dashboard completo para eu controlar minhas vendas de Placa NFC, entao necessita ter aba de clientes, metas, visao geral, custos, configurações e adicione tudo que for importante para um vendedor utilizar para acompanhar e nao se perder
 
