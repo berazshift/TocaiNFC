@@ -13,10 +13,10 @@ const state: State = {
   costs: [{ id: "c1", date: "2026-11-02", description: "Frete", category: "Frete", amount: 30 }],
 };
 describe("contas do mês", () => {
-  it("calcula lucro sem duplicar compras de estoque", () => {
+  it("desconta o custo de todas as placas compradas no mês, inclusive as que ficaram em estoque", () => {
     const m = monthSummary(state, "2026-11");
     expect(m.revenue).toBe(280); expect(m.received).toBe(180); expect(m.pending).toBe(100);
-    expect(m.units).toBe(3); expect(m.profit).toBe(280 - 120 - 28 - 30);
+    expect(m.units).toBe(3); expect(m.productCost).toBe(400); expect(m.profit).toBe(280 - 400 - 28 - 30);
   });
   it("separa compras de placas no caixa e calcula estoque remanescente", () => {
     const m = monthSummary(state, "2026-11");
