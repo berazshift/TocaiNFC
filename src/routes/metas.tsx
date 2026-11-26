@@ -11,9 +11,9 @@ import { saveGoal, useData, type State } from "@/lib/store";
 export const Route = createFileRoute("/metas")({
   head: () => ({
     meta: [
-      { title: "Metas — Tocaai" },
+      { title: "Metas — NFC Sales Hub" },
       { name: "description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },
-      { property: "og:title", content: "Metas — Tocaai" },
+      { property: "og:title", content: "Metas — NFC Sales Hub" },
       { property: "og:description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },
     ],
   }),
@@ -114,7 +114,7 @@ function History({ state, month }: { state: State; month: string }) {
   });
   return (
     <Panel title="Histórico" className="mt-4">
-      <div className="overflow-x-auto">
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full min-w-[520px] text-sm">
           <thead className="text-left text-xs text-muted-foreground">
             <tr className="border-b">
@@ -140,6 +140,16 @@ function History({ state, month }: { state: State; month: string }) {
             })}
           </tbody>
         </table>
+      </div>
+
+      <div className="grid gap-2 sm:hidden">
+        {rows.map(({ month: mm, s, g }) => {
+          const p = percent(s.revenue, g.revenue);
+          return <article key={mm} className="rounded-xl border border-border/80 bg-card p-3">
+            <div className="flex items-center justify-between gap-3"><strong className="capitalize text-sm">{monthLabel(mm)}</strong>{g.revenue ? <Pill tone={p >= 100 ? "success" : p >= 70 ? "warning" : "muted"}>{p}% da meta</Pill> : <Pill tone="muted">Sem meta</Pill>}</div>
+            <div className="mt-2 grid grid-cols-2 gap-3 text-sm"><div><p className="text-xs text-muted-foreground">Meta</p><p className="num font-medium">{g.revenue ? brl(g.revenue) : "—"}</p></div><div><p className="text-xs text-muted-foreground">Vendido</p><p className="num font-semibold">{brl(s.revenue)}</p></div><div><p className="text-xs text-muted-foreground">Placas</p><p className="num font-medium">{s.units}{g.units ? ` / ${g.units}` : ""}</p></div></div>
+          </article>;
+        })}
       </div>
     </Panel>
   );

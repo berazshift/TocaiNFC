@@ -23,7 +23,7 @@ export function PageHeader({ title, description, children }: { title: string; de
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div className="min-w-0">
         <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.17em] text-primary/65">NFC Sales Hub <span className="px-1 text-border">/</span> Gestão comercial</div>
-        <h1 className="text-[1.8rem] font-bold leading-tight tracking-tight text-foreground md:text-[2.1rem]">{title}</h1>
+        <h1 className="text-[clamp(1.45rem,6vw,1.8rem)] font-bold leading-tight tracking-tight text-foreground md:text-[2.1rem]">{title}</h1>
         <p className="mt-1.5 max-w-2xl text-[13px] leading-relaxed text-muted-foreground">{description}</p>
       </div>
       {children ? <div className="flex flex-wrap items-center gap-2">{children}</div> : null}
@@ -41,7 +41,7 @@ export function StatCard({ label, value, hint, icon: Icon, highlight = false }: 
           <Icon className="size-[17px]" strokeWidth={2} />
         </span>
       </div>
-      <div className="num relative mt-4 text-[1.8rem] font-bold leading-none tracking-tight md:text-[2rem]">{value}</div>
+      <div className="num relative mt-4 text-[clamp(1rem,4.2vw,1.8rem)] font-bold leading-tight tracking-tight md:text-[2rem]">{value}</div>
       <p className={cn("relative mt-2.5 text-[11px] leading-relaxed", highlight ? "text-primary-foreground/70" : "text-muted-foreground")}>{hint}</p>
     </div>
   );

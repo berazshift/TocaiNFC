@@ -70,7 +70,7 @@ export function buildExample(): State {
 
   return {
     settings: {
-      businessName: "Tocaai",
+      businessName: "Meu negócio",
       sellerName: "",
       feePercent: 3,
       defaultRevenueGoal: 5000,

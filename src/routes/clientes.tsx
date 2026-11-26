@@ -15,9 +15,9 @@ import { removeItem, saveItem, uid, useData, type Client, type ClientStatus } fr
 export const Route = createFileRoute("/clientes")({
   head: () => ({
     meta: [
-      { title: "Clientes — Tocaai" },
+      { title: "Clientes — NFC Sales Hub" },
       { name: "description", content: "Sua carteira de clientes e contatos em negociação, com histórico de compras e data do próximo retorno." },
-      { property: "og:title", content: "Clientes — Tocaai" },
+      { property: "og:title", content: "Clientes — NFC Sales Hub" },
       { property: "og:description", content: "Sua carteira de clientes e contatos em negociação, com histórico de compras e data do próximo retorno." },
     ],
   }),
@@ -89,7 +89,8 @@ function ClientsPage() {
             {state.clients.length === 0 ? <Button onClick={open}><Plus /> Novo cliente</Button> : null}
           </EmptyState>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] text-sm">
               <thead className="text-left text-xs text-muted-foreground">
                 <tr className="border-b">
@@ -136,6 +137,22 @@ function ClientsPage() {
               </tbody>
             </table>
           </div>
+
+          <div className="grid gap-3 p-3 md:hidden">
+            {rows.map((c) => {
+              const t = clientTotals(state, c.id);
+              return <article key={c.id} className="rounded-xl border border-border/80 bg-card p-3">
+                <div className="flex items-start justify-between gap-2"><div className="min-w-0"><p className="truncate text-sm font-semibold">{c.name}</p><p className="mt-0.5 truncate text-xs text-muted-foreground">{[c.company, c.city].filter(Boolean).join(" · ") || "Sem empresa ou cidade"}</p></div><Pill tone={STATUS[c.status].tone}>{STATUS[c.status].label}</Pill></div>
+                <div className="mt-3 grid grid-cols-2 gap-2 rounded-lg bg-muted/50 p-2.5">
+                  <div><p className="text-[11px] text-muted-foreground">Total comprado</p><p className="num text-sm font-semibold">{brl(t.total)}</p></div>
+                  <div><p className="text-[11px] text-muted-foreground">Última compra</p><p className="text-sm font-medium">{dateLabel(t.last)}</p></div>
+                  <div className="col-span-2"><p className="text-[11px] text-muted-foreground">Próximo contato</p><p className="text-sm font-medium">{c.nextContact ? dateLabel(c.nextContact) : "Não agendado"}</p></div>
+                </div>
+                <div className="mt-2 flex justify-end gap-1">{c.phone ? <Button asChild variant="ghost" size="sm" className="text-success"><a href={whatsapp(c.phone)} target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp</a></Button> : null}<Button variant="ghost" size="sm" onClick={() => setForm(c)}><Pencil /> Editar</Button><ConfirmDelete what={c.name} onConfirm={() => removeItem("clients", c.id)} /></div>
+              </article>;
+            })}
+          </div>
+          </>
         )}
       </div>
 

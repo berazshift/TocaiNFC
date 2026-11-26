@@ -83,10 +83,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Tocaai — Controle de vendas de placas NFC" },
+      { title: "NFC Sales Hub — Gestão de vendas de placas NFC" },
       { name: "description", content: "Painel do vendedor de placas NFC: vendas, clientes, metas, custos e lucro em um só lugar." },
-      { name: "author", content: "Tocaai" },
-      { property: "og:title", content: "Tocaai — Controle de vendas de placas NFC" },
+      { name: "author", content: "NFC Sales Hub" },
+      { property: "og:title", content: "NFC Sales Hub — Gestão de vendas de placas NFC" },
       { property: "og:description", content: "Painel do vendedor de placas NFC: vendas, clientes, metas, custos e lucro em um só lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

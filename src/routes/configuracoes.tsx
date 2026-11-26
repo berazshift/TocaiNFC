@@ -14,9 +14,9 @@ import { EMPTY, normalize, replaceAll, saveSettings, useData, type Settings, typ
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — Tocaai" },
+      { title: "Configurações — NFC Sales Hub" },
       { name: "description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
-      { property: "og:title", content: "Configurações — Tocaai" },
+      { property: "og:title", content: "Configurações — NFC Sales Hub" },
       { property: "og:description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
     ],
   }),
@@ -45,7 +45,10 @@ function SettingsForm({ state }: { state: State }) {
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    saveSettings({ ...s, businessName: s.businessName.trim() || "Tocaai" });
+    if (s.feePercent < 0 || s.feePercent > 100) return void toast.error("A taxa deve ficar entre 0% e 100%.");
+    if (!Number.isInteger(s.stock) || !Number.isInteger(s.lowStock) || !Number.isInteger(s.defaultUnitsGoal)) return void toast.error("Estoque, alerta de estoque e meta de placas devem ser números inteiros.");
+    if (s.unitPrice < 0 || s.unitCost < 0 || s.stock < 0 || s.lowStock < 0 || s.defaultRevenueGoal < 0 || s.defaultUnitsGoal < 0) return void toast.error("Os valores não podem ser negativos.");
+    saveSettings({ ...s, businessName: s.businessName.trim() || "Meu negócio" });
     toast.success("Configurações salvas.");
   };
 
@@ -97,9 +100,9 @@ function Backup({ state }: { state: State }) {
     const url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `tocaai-${todayISO()}.json`;
+    a.download = `nfc-sales-hub-${todayISO()}.json`;
     a.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const importData = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +115,7 @@ function Backup({ state }: { state: State }) {
       replaceAll(normalize(parsed));
       toast.success("Cópia restaurada.");
     } catch {
-      toast.error("Esse arquivo não é uma cópia do Tocaai.");
+      toast.error("Esse arquivo não é uma cópia do NFC Sales Hub.");
     }
   };
 
