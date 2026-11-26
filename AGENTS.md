@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- All app data lives in the browser (localStorage) behind `src/lib/store.ts`; pages read it with `useData()` and render a skeleton until hydrated. Why: the user chose no login, so there is no per-user backend data.
+- Business math (revenue, profit, goals, stock) lives in `src/lib/calc.ts` as pure functions with tests. Why: every page must show the same numbers.
