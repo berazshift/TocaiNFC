@@ -15,9 +15,9 @@ import { removeItem, saveItem, uid, useData, type Sale, type SaleStatus } from "
 export const Route = createFileRoute("/vendas")({
   head: () => ({
     meta: [
-      { title: "Vendas — Tocaai" },
+      { title: "Vendas — NFC Sales Hub" },
       { name: "description", content: "Registre cada venda de placa NFC, acompanhe pagamentos pendentes e veja o total do mês." },
-      { property: "og:title", content: "Vendas — Tocaai" },
+      { property: "og:title", content: "Vendas — NFC Sales Hub" },
       { property: "og:description", content: "Registre cada venda de placa NFC, acompanhe pagamentos pendentes e veja o total do mês." },
     ],
   }),
@@ -51,8 +51,12 @@ function SalesPage() {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!form) return;
-    if (form.quantity < 1) return void toast.error("Informe a quantidade de placas.");
-    if (form.unitPrice <= 0) return void toast.error("Informe o preço da placa.");
+    if (!Number.isInteger(form.quantity) || form.quantity < 1) return void toast.error("Informe uma quantidade inteira de placas.");
+    if (!Number.isFinite(form.unitPrice) || form.unitPrice <= 0) return void toast.error("Informe um preço válido por placa.");
+    if (!Number.isFinite(form.unitCost) || form.unitCost < 0) return void toast.error("Informe um custo válido por placa.");
+    if (!Number.isFinite(form.discount) || form.discount < 0 || form.discount > form.quantity * form.unitPrice) return void toast.error("O desconto não pode ser maior que o valor bruto da venda.");
+    if (form.status !== "cancelado" && form.quantity > stock) return void toast.error(`Estoque insuficiente. Disponível: ${stock} placas.`);
+    if (form.status === "pendente" && !form.dueDate) return void toast.error("Informe a data de vencimento do pagamento pendente.");
     saveItem("sales", { ...form, dueDate: form.status === "pendente" ? form.dueDate : "" });
     setForm(null);
     toast.success(isEdit ? "Venda atualizada." : "Venda registrada.");
@@ -145,7 +149,7 @@ function SalesPage() {
       </div>
 
       <Dialog open={form !== null} onOpenChange={(o) => !o && setForm(null)}>
-        <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="sm:max-w-lg">
           {form ? (
             <form onSubmit={submit} className="grid gap-4">
               <DialogHeader>
@@ -178,7 +182,7 @@ function SalesPage() {
                   </select>
                 </Field>
                 {form.status === "pendente" ? (
-                  <Field label="Vence em" className="sm:col-span-2"><Input type="date" value={form.dueDate} onChange={(e) => set({ dueDate: e.target.value })} /></Field>
+                  <Field label="Vence em" className="sm:col-span-2"><Input type="date" required value={form.dueDate} onChange={(e) => set({ dueDate: e.target.value })} /></Field>
                 ) : null}
                 <Field label="Observações" className="sm:col-span-2"><Textarea rows={2} value={form.notes} onChange={(e) => set({ notes: e.target.value })} /></Field>
               </div>
