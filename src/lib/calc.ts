@@ -38,16 +38,27 @@ export function monthSummary(state: State, month: string): MonthSummary {
     stockPurchases, cashBalance, inventoryValue: inventoryValue(state),
   };
 }
+/** Valoriza o estoque pelo custo FIFO, respeitando a ordem cronológica de compras e vendas. */
 export function inventoryValue(state: State) {
-  const lots = [...state.stockPurchases].sort((a, b) => a.date.localeCompare(b.date));
-  let unitsToConsume = sum(state.sales.filter(active).map((s) => s.quantity));
-  let value = 0;
-  for (const lot of lots) {
-    const remaining = Math.max(0, lot.quantity - unitsToConsume);
-    value += remaining * lot.unitCost;
-    unitsToConsume = Math.max(0, unitsToConsume - lot.quantity);
+  const events = [
+    ...state.stockPurchases.map((purchase) => ({ date: purchase.date, kind: "purchase" as const, quantity: purchase.quantity, unitCost: purchase.unitCost })),
+    ...state.sales.filter(active).map((sale) => ({ date: sale.date, kind: "sale" as const, quantity: sale.quantity })),
+  ].sort((a, b) => a.date.localeCompare(b.date) || (a.kind === "purchase" ? -1 : 1));
+  const lots: { quantity: number; unitCost: number }[] = [];
+  for (const event of events) {
+    if (event.kind === "purchase") {
+      lots.push({ quantity: event.quantity, unitCost: event.unitCost });
+      continue;
+    }
+    let remaining = event.quantity;
+    for (const lot of lots) {
+      const consumed = Math.min(lot.quantity, remaining);
+      lot.quantity -= consumed;
+      remaining -= consumed;
+      if (remaining === 0) break;
+    }
   }
-  return value;
+  return sum(lots.map((lot) => lot.quantity * lot.unitCost));
 }
 export function goalFor(state: State, month: string) {
   const g = state.goals.find((x) => x.month === month);
