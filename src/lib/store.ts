@@ -60,7 +60,7 @@ export interface State {
 }
 
 export const DEFAULT_SETTINGS: Settings = {
-  businessName: "Tocaai",
+  businessName: "Meu negócio",
   sellerName: "",
   feePercent: 0,
   defaultRevenueGoal: 0,
@@ -84,16 +84,88 @@ let state: State = EMPTY;
 let loaded = false;
 const listeners = new Set<() => void>();
 
+type UnknownRecord = Record<string, unknown>;
+const isRecord = (value: unknown): value is UnknownRecord =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
+const text = (value: unknown, fallback = "") =>
+  typeof value === "string" ? value : fallback;
+const number = (value: unknown, fallback = 0) =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback;
+const validDate = (value: unknown) =>
+  typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+const validMonth = (value: unknown) =>
+  typeof value === "string" && /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
+
 export function normalize(value: unknown): State {
-  const o = (value && typeof value === "object" ? value : {}) as Partial<State>;
-  const list = <T>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
-  return {
-    settings: { ...DEFAULT_SETTINGS, ...(o.settings ?? {}) },
-    clients: list<Client>(o.clients),
-    sales: list<Sale>(o.sales),
-    costs: list<Cost>(o.costs),
-    goals: list<Goal>(o.goals),
+  const source = isRecord(value) ? value : {};
+  const rawSettings = isRecord(source.settings) ? source.settings : {};
+  const settings: Settings = {
+    businessName: text(rawSettings.businessName, DEFAULT_SETTINGS.businessName),
+    sellerName: text(rawSettings.sellerName),
+    feePercent: Math.min(100, Math.max(0, number(rawSettings.feePercent))),
+    defaultRevenueGoal: Math.max(0, number(rawSettings.defaultRevenueGoal)),
+    defaultUnitsGoal: Math.max(0, Math.floor(number(rawSettings.defaultUnitsGoal))),
+    lowStock: Math.max(0, Math.floor(number(rawSettings.lowStock, DEFAULT_SETTINGS.lowStock))),
+    unitPrice: Math.max(0, number(rawSettings.unitPrice)),
+    unitCost: Math.max(0, number(rawSettings.unitCost)),
+    stock: Math.max(0, Math.floor(number(rawSettings.stock))),
   };
+
+  const clients: Client[] = (Array.isArray(source.clients) ? source.clients : [])
+    .filter((item): item is UnknownRecord => isRecord(item) && typeof item.id === "string" && typeof item.name === "string")
+    .map((item) => ({
+      id: text(item.id),
+      name: text(item.name),
+      company: text(item.company),
+      phone: text(item.phone),
+      email: text(item.email),
+      city: text(item.city),
+      status: (["lead", "negociando", "cliente", "inativo"] as const).includes(item.status as ClientStatus) ? item.status as ClientStatus : "lead",
+      notes: text(item.notes),
+      nextContact: validDate(item.nextContact) ? item.nextContact : "",
+      createdAt: validDate(item.createdAt) ? item.createdAt : "",
+    }));
+
+  const sales: Sale[] = (Array.isArray(source.sales) ? source.sales : [])
+    .filter((item): item is UnknownRecord => isRecord(item) && typeof item.id === "string" && validDate(item.date))
+    .map((item) => {
+      const quantity = Math.max(1, Math.floor(number(item.quantity, 1)));
+      const unitPrice = Math.max(0, number(item.unitPrice, settings.unitPrice));
+      const gross = quantity * unitPrice;
+      return {
+        id: text(item.id),
+        date: text(item.date),
+        clientId: text(item.clientId),
+        quantity,
+        unitPrice,
+        unitCost: Math.max(0, number(item.unitCost, settings.unitCost)),
+        discount: Math.min(gross, Math.max(0, number(item.discount))),
+        payment: text(item.payment, "Pix"),
+        status: (["pago", "pendente", "cancelado"] as const).includes(item.status as SaleStatus) ? item.status as SaleStatus : "pago",
+        dueDate: validDate(item.dueDate) ? item.dueDate : "",
+        notes: text(item.notes),
+      };
+    });
+
+  const costs: Cost[] = (Array.isArray(source.costs) ? source.costs : [])
+    .filter((item): item is UnknownRecord => isRecord(item) && typeof item.id === "string" && validDate(item.date))
+    .map((item) => ({
+      id: text(item.id),
+      date: text(item.date),
+      description: text(item.description),
+      category: text(item.category, "Outros"),
+      amount: Math.max(0, number(item.amount)),
+    }));
+
+  const goals: Goal[] = (Array.isArray(source.goals) ? source.goals : [])
+    .filter((item): item is UnknownRecord => isRecord(item) && validMonth(item.month))
+    .map((item) => ({
+      month: text(item.month),
+      revenue: Math.max(0, number(item.revenue)),
+      units: Math.max(0, Math.floor(number(item.units))),
+    }));
+
+  return { settings, clients, sales, costs, goals };
 }
 
 function load() {
@@ -103,7 +175,8 @@ function load() {
     const raw = window.localStorage.getItem(KEY);
     if (raw) state = normalize(JSON.parse(raw));
   } catch {
-    // dados ilegíveis: começa vazio
+    // Mantém a aplicação utilizável mesmo se o armazenamento estiver indisponível ou ilegível.
+    state = EMPTY;
   }
 }
 
@@ -115,7 +188,7 @@ function getSnapshot() {
 function subscribe(cb: () => void) {
   listeners.add(cb);
   const onStorage = (e: StorageEvent) => {
-    if (e.key !== KEY) return;
+    if (e.key !== KEY && e.key !== null) return;
     loaded = false;
     load();
     cb();
@@ -129,11 +202,11 @@ function subscribe(cb: () => void) {
 
 export function setState(fn: (s: State) => State) {
   load();
-  state = fn(state);
+  state = normalize(fn(state));
   try {
     window.localStorage.setItem(KEY, JSON.stringify(state));
   } catch {
-    // sem espaço no aparelho
+    // O estado segue disponível na sessão atual; o usuário ainda pode exportar um backup.
   }
   listeners.forEach((l) => l());
 }
