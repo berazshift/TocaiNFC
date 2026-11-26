@@ -114,7 +114,7 @@ function History({ state, month }: { state: State; month: string }) {
   });
   return (
     <Panel title="Histórico" className="mt-4">
-      <div className="overflow-x-auto">
+      <div className="hidden overflow-x-auto sm:block">
         <table className="w-full min-w-[520px] text-sm">
           <thead className="text-left text-xs text-muted-foreground">
             <tr className="border-b">
