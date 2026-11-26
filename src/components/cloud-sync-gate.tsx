@@ -13,6 +13,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [checking, setChecking] = useState(true);
   const [hydrated, setHydrated] = useState(false);
+  const [canSync, setCanSync] = useState(false);
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState("");
@@ -30,6 +31,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
       if (!alive) return;
       setSession(nextSession);
       setHydrated(false);
+      setCanSync(false);
       setChecking(false);
     });
     return () => {
@@ -42,6 +44,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
     if (!session?.user.id) return;
     let cancelled = false;
     setHydrated(false);
+    setCanSync(false);
     (async () => {
       const { data, error } = await db.from("tocainfc_user_data")
         .select("payload")
@@ -51,6 +54,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
       if (error) {
         setSyncState("offline");
         setMessage("Não foi possível carregar a cópia da nuvem. Seus dados locais foram preservados.");
+        setCanSync(false);
         setHydrated(true);
         return;
       }
@@ -65,15 +69,21 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
         if (saveError) {
           setSyncState("offline");
           setMessage("Não foi possível enviar seus dados locais para a nuvem. Eles continuam salvos neste aparelho.");
+          setCanSync(false);
+        } else {
+          setCanSync(true);
         }
       }
-      if (!cancelled) setHydrated(true);
+      if (!cancelled) {
+        if (data?.payload && typeof data.payload === "object") setCanSync(true);
+        setHydrated(true);
+      }
     })();
     return () => { cancelled = true; };
   }, [session?.user.id]);
 
   useEffect(() => {
-    if (!session?.user.id || !hydrated) return;
+    if (!session?.user.id || !hydrated || !canSync) return;
     setSyncState("saving");
     const timer = window.setTimeout(async () => {
       const { error } = await db.from("tocainfc_user_data").upsert({
@@ -86,7 +96,7 @@ export function CloudSyncGate({ children }: { children: ReactNode }) {
       else setMessage("");
     }, 800);
     return () => window.clearTimeout(timer);
-  }, [state, session?.user.id, hydrated]);
+  }, [state, session?.user.id, hydrated, canSync]);
 
   const sendMagicLink = async (event: FormEvent) => {
     event.preventDefault();
