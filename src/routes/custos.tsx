@@ -14,9 +14,9 @@ import { removeItem, saveItem, uid, useData, type Cost } from "@/lib/store";
 export const Route = createFileRoute("/custos")({
   head: () => ({
     meta: [
-      { title: "Custos — Tocaai" },
+      { title: "Custos — NFC Sales Hub" },
       { name: "description", content: "Lance fretes, anúncios, embalagens e outras despesas para saber o lucro real das suas vendas." },
-      { property: "og:title", content: "Custos — Tocaai" },
+      { property: "og:title", content: "Custos — NFC Sales Hub" },
       { property: "og:description", content: "Lance fretes, anúncios, embalagens e outras despesas para saber o lucro real das suas vendas." },
     ],
   }),
