@@ -83,6 +83,7 @@ export function buildExample(): State {
     clients,
     sales,
     costs,
+    stockPurchases: [{ id: uid(), date: `${addMonths(month, -5)}-01`, quantity: 400, unitCost: 32, description: "Estoque inicial de exemplo" }],
     goals: [],
   };
 }
