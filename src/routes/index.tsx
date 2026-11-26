@@ -14,9 +14,9 @@ import { replaceAll, saveItem, useData } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Visão geral — Tocaai" },
+      { title: "Visão geral — NFC Sales Hub" },
       { name: "description", content: "Faturamento, lucro, meta do mês, valores a receber e próximos contatos das suas vendas de placas NFC." },
-      { property: "og:title", content: "Visão geral — Tocaai" },
+      { property: "og:title", content: "Visão geral — NFC Sales Hub" },
       { property: "og:description", content: "Faturamento, lucro, meta do mês, valores a receber e próximos contatos das suas vendas de placas NFC." },
     ],
   }),
@@ -32,7 +32,7 @@ function Dashboard() {
   if (isNew) {
     return (
       <div className="card-surface mx-auto max-w-2xl">
-        <EmptyState icon={Nfc} title="Bem-vindo ao Tocaai" text="Comece informando o preço e o custo da sua placa. Depois cadastre clientes e registre cada venda — o painel faz as contas.">
+        <EmptyState icon={Nfc} title="Seu próximo resultado começa aqui" text="Comece informando o preço e o custo da sua placa. Depois cadastre clientes e registre cada venda — o painel faz as contas.">
           <Button asChild>
             <Link to="/configuracoes">Configurar minha placa</Link>
           </Button>
@@ -70,7 +70,7 @@ function Dashboard() {
 
   return (
     <>
-      <PageHeader title={hello} description="O resumo das suas vendas de placas NFC.">
+      <PageHeader title={hello} description="Acompanhe seus indicadores, oportunidades e resultados em um só lugar.">
         <MonthNav month={month} onChange={setMonth} />
       </PageHeader>
 
