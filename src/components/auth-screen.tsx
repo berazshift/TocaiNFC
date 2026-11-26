@@ -21,7 +21,7 @@ const friendly = (message: string) => {
 const copy: Record<Mode, { title: string; text: string; action: string }> = {
   signin: { title: "Entre no TocaiNFC", text: "Acesse suas vendas, clientes, estoque e metas em qualquer aparelho.", action: "Entrar" },
   signup: { title: "Crie sua conta", text: "Cadastre-se para guardar e sincronizar seus dados de vendas.", action: "Criar conta" },
-  forgot: { title: "Redefinir senha", text: "Informe seu e-mail e enviaremos um link para criar uma nova senha.", action: "Enviar link" },
+  forgot: { title: "Criar sua senha", text: "Como você entra por link de e-mail, vamos enviar uma confirmação única para cadastrar sua senha. Depois, entre pelo ícone do TocaiNFC sem precisar de novos links.", action: "Enviar link para criar senha" },
 };
 
 export function AuthScreen() {
@@ -116,7 +116,7 @@ export function AuthScreen() {
               <div className="flex items-center justify-between">
                 <Label htmlFor="auth-password">Senha</Label>
                 {mode === "signin" ? (
-                  <button type="button" className="text-xs font-medium text-primary hover:underline" onClick={() => change("forgot")}>Esqueci a senha</button>
+                  <button type="button" className="text-xs font-medium text-primary hover:underline" onClick={() => change("forgot")}>Criar / esqueci minha senha</button>
                 ) : null}
               </div>
               <Input id="auth-password" type="password" required minLength={6} autoComplete={mode === "signup" ? "new-password" : "current-password"} value={password} onChange={(event) => setPassword(event.target.value)} placeholder={mode === "signup" ? "Mínimo de 6 caracteres" : "Sua senha"} />
