@@ -89,6 +89,7 @@ function ClientsPage() {
             {state.clients.length === 0 ? <Button onClick={open}><Plus /> Novo cliente</Button> : null}
           </EmptyState>
         ) : (
+          <>
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] text-sm">
               <thead className="text-left text-xs text-muted-foreground">
@@ -151,6 +152,7 @@ function ClientsPage() {
               </article>;
             })}
           </div>
+          </>
         )}
       </div>
 
