@@ -1,0 +1,16 @@
+{
+  "name": "TocaiNFC — Gestão de vendas de placas NFC",
+  "short_name": "TocaiNFC",
+  "description": "Painel do vendedor de placas NFC: vendas, clientes, metas, custos e lucro em um só lugar.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1B3A",
+  "theme_color": "#0B1B3A",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/tocainfc-symbol.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

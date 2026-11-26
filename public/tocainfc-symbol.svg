@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TocaiNFC">
+  <title>TocaiNFC</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#10254D"/><stop offset="1" stop-color="#060F24"/></linearGradient>
+    <linearGradient id="ac" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2B7BFF"/><stop offset="1" stop-color="#2EE6C8"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="30" y="30" width="452" height="452" rx="90" fill="none" stroke="url(#ac)" stroke-width="18"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M349 169a44 44 0 0 1 0 62M379 139a86 86 0 0 1 0 122M408 110a128 128 0 0 1 0 180" stroke="url(#ac)" stroke-width="22"/>
+    <rect x="112" y="96" width="176" height="320" rx="36" fill="#0A1A3A" stroke="#FFFFFF" stroke-width="22"/>
+    <path d="M150 330l42-52 30 26 38-66M218 234h44v44" stroke="#2EE6C8" stroke-width="22"/>
+  </g>
+  <g transform="rotate(-8 344 374)">
+    <rect x="258" y="320" width="172" height="108" rx="20" fill="url(#ac)" stroke="#081530" stroke-width="12"/>
+    <rect x="264" y="346" width="160" height="20" fill="#081530"/>
+    <rect x="282" y="386" width="52" height="16" rx="8" fill="#081530"/>
+  </g>
+</svg>

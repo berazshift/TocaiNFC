@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowUpRight, BarChart3, Calculator, CalendarDays, LayoutDashboard, Nfc, Plus, Receipt, Settings, Target, Users, Wallet } from "lucide-react";
+import { ArrowUpRight, BarChart3, Calculator, CalendarDays, LayoutDashboard, Plus, Receipt, Settings, Target, Users, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -47,15 +47,10 @@ function AppSidebar() {
   return (
     <Sidebar collapsible="offcanvas" className="border-r-0">
       <SidebarHeader className="px-4 pb-7 pt-6">
-        <div className="flex items-center gap-3 overflow-hidden">
-          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-lg shadow-black/10">
-            <Nfc className="size-5" strokeWidth={2.2} />
-          </span>
-          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-            <div className="truncate text-base font-bold leading-tight tracking-tight text-white">Tocai<span className="text-sidebar-primary">NFC</span></div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/45">Sales workspace</div>
-          </div>
-        </div>
+        <Link to="/" onClick={() => setOpenMobile(false)} className="block w-fit rounded-xl" aria-label="TocaiNFC — Visão geral">
+          <img src="/tocainfc-logo.svg" alt="TocaiNFC" width={171} height={44} className="h-11 w-auto" />
+        </Link>
+        <div className="-mt-2 pl-[58px] text-[10px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/45">Sales workspace</div>
       </SidebarHeader>
       <SidebarContent className="px-3">
         <div className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.16em] text-sidebar-foreground/40 group-data-[collapsible=icon]:hidden">Menu principal</div>
