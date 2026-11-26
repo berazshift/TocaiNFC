@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Trash2, type LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -73,15 +73,35 @@ export const selectClass =
   "h-10 w-full rounded-xl border border-input bg-card px-3 text-[13px] shadow-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring/30";
 
 export function NumberInput({ value, onChange, step = "0.01", placeholder }: { value: number; onChange: (n: number) => void; step?: string; placeholder?: string }) {
+  const [draft, setDraft] = useState(String(value ?? 0));
+
+  useEffect(() => {
+    setDraft(String(value ?? 0));
+  }, [value]);
+
+  const update = (raw: string) => {
+    setDraft(raw);
+    if (raw.trim() === "") return;
+    const parsed = Number(raw.replace(",", "."));
+    if (Number.isFinite(parsed) && parsed >= 0) onChange(parsed);
+  };
+
+  const commit = () => {
+    const parsed = Number(draft.trim().replace(",", "."));
+    const next = Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+    setDraft(String(next));
+    onChange(next);
+  };
+
   return (
     <Input
-      type="number"
-      inputMode="decimal"
-      min="0"
-      step={step}
+      type="text"
+      inputMode={step === "1" ? "numeric" : "decimal"}
+      autoComplete="off"
       placeholder={placeholder ?? "0"}
-      value={value || ""}
-      onChange={(e) => onChange(Number(e.target.value) || 0)}
+      value={draft}
+      onChange={(e) => update(e.target.value)}
+      onBlur={commit}
       className="h-10 rounded-xl bg-card text-[13px] shadow-sm"
     />
   );
