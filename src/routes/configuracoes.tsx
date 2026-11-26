@@ -45,6 +45,9 @@ function SettingsForm({ state }: { state: State }) {
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
+    if (s.feePercent < 0 || s.feePercent > 100) return void toast.error("A taxa deve ficar entre 0% e 100%.");
+    if (!Number.isInteger(s.stock) || !Number.isInteger(s.lowStock) || !Number.isInteger(s.defaultUnitsGoal)) return void toast.error("Estoque, alerta de estoque e meta de placas devem ser números inteiros.");
+    if (s.unitPrice < 0 || s.unitCost < 0 || s.stock < 0 || s.lowStock < 0 || s.defaultRevenueGoal < 0 || s.defaultUnitsGoal < 0) return void toast.error("Os valores não podem ser negativos.");
     saveSettings({ ...s, businessName: s.businessName.trim() || "Meu negócio" });
     toast.success("Configurações salvas.");
   };
@@ -99,7 +102,7 @@ function Backup({ state }: { state: State }) {
     a.href = url;
     a.download = `nfc-sales-hub-${todayISO()}.json`;
     a.click();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const importData = async (e: ChangeEvent<HTMLInputElement>) => {
