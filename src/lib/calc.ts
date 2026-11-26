@@ -20,21 +20,24 @@ export interface MonthSummary {
   productCost: number; fees: number; expenses: number; profit: number; margin: number; ticket: number;
   stockPurchases: number; cashBalance: number; inventoryValue: number;
 }
-/** Lucro reconhece apenas o custo das unidades vendidas; compras de estoque afetam o caixa, não o lucro novamente. */
+/** Resultado mensal considera o custo integral das placas compradas no mês, vendidas ou ainda em estoque. */
 export function monthSummary(state: State, month: string): MonthSummary {
   const sales = state.sales.filter((s) => active(s) && monthOf(s.date) === month);
   const revenue = sum(sales.map(saleTotal));
-  const productCost = sum(sales.map(saleCost));
+  const received = sum(sales.filter((s) => s.status === "pago").map(saleTotal));
+  const pending = sum(sales.filter((s) => s.status === "pendente").map(saleTotal));
+  const stockPurchases = sum(state.stockPurchases.filter((p) => monthOf(p.date) === month).map((p) => p.quantity * p.unitCost));
   const fees = revenue * state.settings.feePercent / 100;
   const expenses = sum(state.costs.filter((c) => monthOf(c.date) === month).map((c) => c.amount));
-  const profit = revenue - productCost - fees - expenses;
-  const received = sum(sales.filter((s) => s.status === "pago").map(saleTotal));
-  const stockPurchases = sum(state.stockPurchases.filter((p) => monthOf(p.date) === month).map((p) => p.quantity * p.unitCost));
+  // productCost mantém o nome usado pelo restante da aplicação, mas agora representa
+  // o total comprado no mês, não apenas o custo das unidades vendidas.
+  const productCost = stockPurchases;
+  const profit = revenue - stockPurchases - fees - expenses;
   const cashBalance = received - stockPurchases - expenses - (received * state.settings.feePercent / 100);
   return {
-    revenue, received, pending: sum(sales.filter((s) => s.status === "pendente").map(saleTotal)),
-    units: sum(sales.map((s) => s.quantity)), salesCount: sales.length, productCost, fees, expenses,
-    profit, margin: revenue > 0 ? profit / revenue * 100 : 0, ticket: sales.length > 0 ? revenue / sales.length : 0,
+    revenue, received, pending, units: sum(sales.map((s) => s.quantity)), salesCount: sales.length,
+    productCost, fees, expenses, profit, margin: revenue > 0 ? profit / revenue * 100 : 0,
+    ticket: sales.length > 0 ? revenue / sales.length : 0,
     stockPurchases, cashBalance, inventoryValue: inventoryValue(state),
   };
 }
