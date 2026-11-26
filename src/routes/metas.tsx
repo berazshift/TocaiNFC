@@ -11,9 +11,9 @@ import { saveGoal, useData, type State } from "@/lib/store";
 export const Route = createFileRoute("/metas")({
   head: () => ({
     meta: [
-      { title: "Metas — Tocaai" },
+      { title: "Metas — NFC Sales Hub" },
       { name: "description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },
-      { property: "og:title", content: "Metas — Tocaai" },
+      { property: "og:title", content: "Metas — NFC Sales Hub" },
       { property: "og:description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },
     ],
   }),
