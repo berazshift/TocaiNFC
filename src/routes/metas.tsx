@@ -141,6 +141,16 @@ function History({ state, month }: { state: State; month: string }) {
           </tbody>
         </table>
       </div>
+
+      <div className="grid gap-2 sm:hidden">
+        {rows.map(({ month: mm, s, g }) => {
+          const p = percent(s.revenue, g.revenue);
+          return <article key={mm} className="rounded-xl border border-border/80 bg-card p-3">
+            <div className="flex items-center justify-between gap-3"><strong className="capitalize text-sm">{monthLabel(mm)}</strong>{g.revenue ? <Pill tone={p >= 100 ? "success" : p >= 70 ? "warning" : "muted"}>{p}% da meta</Pill> : <Pill tone="muted">Sem meta</Pill>}</div>
+            <div className="mt-2 grid grid-cols-2 gap-3 text-sm"><div><p className="text-xs text-muted-foreground">Meta</p><p className="num font-medium">{g.revenue ? brl(g.revenue) : "—"}</p></div><div><p className="text-xs text-muted-foreground">Vendido</p><p className="num font-semibold">{brl(s.revenue)}</p></div><div><p className="text-xs text-muted-foreground">Placas</p><p className="num font-medium">{s.units}{g.units ? ` / ${g.units}` : ""}</p></div></div>
+          </article>;
+        })}
+      </div>
     </Panel>
   );
 }
