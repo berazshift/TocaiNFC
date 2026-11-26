@@ -14,9 +14,9 @@ import { EMPTY, normalize, replaceAll, saveSettings, useData, type Settings, typ
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — NFC Sales Hub" },
+      { title: "Configurações — TocaiNFC" },
       { name: "description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
-      { property: "og:title", content: "Configurações — NFC Sales Hub" },
+      { property: "og:title", content: "Configurações — TocaiNFC" },
       { property: "og:description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
     ],
   }),
@@ -100,7 +100,7 @@ function Backup({ state }: { state: State }) {
     const url = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `nfc-sales-hub-${todayISO()}.json`;
+    a.download = `tocainfc-${todayISO()}.json`;
     a.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -115,7 +115,7 @@ function Backup({ state }: { state: State }) {
       replaceAll(normalize(parsed));
       toast.success("Cópia restaurada.");
     } catch {
-      toast.error("Esse arquivo não é uma cópia do NFC Sales Hub.");
+      toast.error("Esse arquivo não é uma cópia do TocaiNFC.");
     }
   };
 
