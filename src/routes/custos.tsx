@@ -59,20 +59,20 @@ function CostsPage() {
 
   const lines: [string, number][] = [
     ["Faturamento (vendas)", m.revenue],
-    ["Custo das placas vendidas", -m.productCost],
+    ["Custo total das placas compradas", -m.stockPurchases],
     [`Taxas (${state.settings.feePercent}%)`, -m.fees],
     ["Despesas operacionais", -m.expenses],
   ];
 
   return <>
-    <PageHeader title="Custos e caixa" description="Lucro considera placas vendidas. Compras de estoque entram como saída de caixa, sem duplicar o custo no lucro.">
+    <PageHeader title="Custos e caixa" description="O custo de todas as placas compradas no mês é descontado do resultado, mesmo que ainda estejam em estoque.">
       <MonthNav month={month} onChange={setMonth} />
       <Button variant="outline" onClick={openPurchase}><Package /> Comprar placas</Button>
       <Button onClick={open}><Plus /> Novo custo</Button>
     </PageHeader>
 
     <div className="mb-4 grid gap-3 sm:grid-cols-3">
-      <div className="card-surface p-4"><p className="text-xs text-muted-foreground">Lucro do mês</p><p className={`num mt-1 text-2xl font-semibold ${m.profit < 0 ? "text-destructive" : "text-success"}`}>{brl(m.profit)}</p><p className="mt-1 text-xs text-muted-foreground">Resultado das vendas e despesas</p></div>
+      <div className="card-surface p-4"><p className="text-xs text-muted-foreground">Resultado do mês</p><p className={`num mt-1 text-2xl font-semibold ${m.profit < 0 ? "text-destructive" : "text-success"}`}>{brl(m.profit)}</p><p className="mt-1 text-xs text-muted-foreground">Faturamento menos compras totais, taxas e despesas</p></div>
       <div className="card-surface p-4"><p className="text-xs text-muted-foreground">Saldo de caixa do mês</p><p className={`num mt-1 text-2xl font-semibold ${m.cashBalance < 0 ? "text-destructive" : "text-foreground"}`}>{brl(m.cashBalance)}</p><p className="mt-1 text-xs text-muted-foreground">Recebido − compras − despesas − taxas sobre recebidos</p></div>
       <div className="card-surface p-4"><p className="text-xs text-muted-foreground">Capital no estoque atual</p><p className="num mt-1 text-2xl font-semibold">{brl(m.inventoryValue)}</p><p className="mt-1 text-xs text-muted-foreground">Valor estimado das placas ainda disponíveis</p></div>
     </div>
@@ -113,7 +113,7 @@ function CostsPage() {
 
     <Dialog open={purchaseForm !== null} onOpenChange={(o) => !o && setPurchaseForm(null)}>
       <DialogContent className="sm:max-w-md">{purchaseForm ? <form onSubmit={submitPurchase} className="grid gap-4">
-        <DialogHeader><DialogTitle>Registrar compra de placas</DialogTitle><DialogDescription>A quantidade aumenta o estoque. O total sai do caixa na data informada, mas não é descontado novamente do lucro.</DialogDescription></DialogHeader>
+        <DialogHeader><DialogTitle>Registrar compra de placas</DialogTitle><DialogDescription>A quantidade aumenta o estoque e o valor total da compra é descontado do resultado e do caixa no mês da compra.</DialogDescription></DialogHeader>
         <Field label="Descrição"><Input value={purchaseForm.description} onChange={(e) => setPurchase({ description: e.target.value })} /></Field>
         <div className="grid gap-4 sm:grid-cols-2"><Field label="Quantidade de placas"><NumberInput step="1" value={purchaseForm.quantity} onChange={(quantity) => setPurchase({ quantity })} /></Field><Field label="Custo por placa (R$)"><NumberInput value={purchaseForm.unitCost} onChange={(unitCost) => setPurchase({ unitCost })} /></Field></div>
         <Field label="Data da compra"><Input type="date" required value={purchaseForm.date} onChange={(e) => setPurchase({ date: e.target.value })} /></Field>
