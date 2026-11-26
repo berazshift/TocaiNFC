@@ -27,6 +27,8 @@ const items = [
   { title: "Configurações", to: "/configuracoes", icon: Settings },
 ] as const;
 
+const mobileItems = items.slice(0, 5);
+
 const pageNames: Record<string, string> = {
   "/": "Visão geral",
   "/vendas": "Vendas",
@@ -89,6 +91,28 @@ function AppSidebar() {
   );
 }
 
+function MobileNavigation() {
+  const path = useRouterState({ select: (r) => r.location.pathname });
+  return (
+    <nav aria-label="Navegação principal" className="mobile-bottom-nav md:hidden">
+      {mobileItems.map((item) => {
+        const active = path === item.to;
+        return (
+          <Link
+            key={item.to}
+            to={item.to}
+            aria-current={active ? "page" : undefined}
+            className={`mobile-bottom-nav-item ${active ? "is-active" : ""}`}
+          >
+            <item.icon aria-hidden="true" className="size-5" strokeWidth={active ? 2.3 : 1.8} />
+            <span>{item.title === "Visão geral" ? "Início" : item.title}</span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
 export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (r) => r.location.pathname });
   const { state } = useData();
@@ -120,13 +144,14 @@ export function AppShell({ children }: { children: ReactNode }) {
               <div className="hidden size-9 items-center justify-center rounded-full border border-primary/10 bg-primary/10 text-xs font-bold text-primary sm:flex" title={seller}>{initials || "VS"}</div>
             </div>
           </header>
-          <main className="mx-auto w-full max-w-[1480px] flex-1 px-4 py-6 md:px-8 md:py-8 xl:px-10">{children}</main>
-          <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-border/70 px-6 py-4 text-[11px] text-muted-foreground md:px-10">
+          <main className="mx-auto w-full max-w-[1480px] flex-1 px-4 py-6 pb-28 md:px-8 md:py-8 md:pb-8 xl:px-10">{children}</main>
+          <footer className="hidden flex-wrap items-center justify-between gap-2 border-t border-border/70 px-6 py-4 text-[11px] text-muted-foreground md:flex md:px-10">
             <span>NFC Sales Hub <span className="text-border">·</span> Gestão comercial</span>
             <span>Organização para vender melhor, todos os dias.</span>
           </footer>
         </div>
       </div>
+      <MobileNavigation />
     </SidebarProvider>
   );
 }
