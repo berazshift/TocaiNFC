@@ -74,7 +74,7 @@ function Dashboard() {
         <MonthNav month={month} onChange={setMonth} />
       </PageHeader>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard highlight label="Faturamento" value={brl(m.revenue)} hint={`${brl(m.received)} já recebido`} icon={CircleDollarSign} />
         <StatCard label="Lucro" value={brl(m.profit)} hint={`Margem de ${m.margin.toFixed(0)}% depois de custos e taxas`} icon={TrendingUp} />
         <StatCard label="Placas vendidas" value={String(m.units)} hint={`${m.salesCount} ${m.salesCount === 1 ? "venda" : "vendas"} · ticket médio ${brl(m.ticket)}`} icon={Nfc} />
