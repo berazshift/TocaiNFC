@@ -15,7 +15,6 @@ import { removeItem, saveItem, uid, useData, type Client, type ClientStatus } fr
 export const Route = createFileRoute("/clientes")({
   head: () => ({
     meta: [
-      { title: "Clientes — TocaiNFC" },
       { name: "description", content: "Sua carteira de clientes e contatos em negociação, com histórico de compras e data do próximo retorno." },
       { property: "og:title", content: "Clientes — TocaiNFC" },
       { property: "og:description", content: "Sua carteira de clientes e contatos em negociação, com histórico de compras e data do próximo retorno." },

@@ -15,7 +15,6 @@ import { removeItem, saveItem, uid, useData, type Sale, type SaleStatus } from "
 export const Route = createFileRoute("/vendas")({
   head: () => ({
     meta: [
-      { title: "Vendas — TocaiNFC" },
       { name: "description", content: "Registre cada venda de placa NFC, acompanhe pagamentos pendentes e veja o total do mês." },
       { property: "og:title", content: "Vendas — TocaiNFC" },
       { property: "og:description", content: "Registre cada venda de placa NFC, acompanhe pagamentos pendentes e veja o total do mês." },

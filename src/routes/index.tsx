@@ -14,7 +14,6 @@ import { replaceAll, saveItem, useData } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Visão geral — TocaiNFC" },
       { name: "description", content: "Faturamento, lucro, meta do mês, valores a receber e próximos contatos das suas vendas de placas NFC." },
       { property: "og:title", content: "Visão geral — TocaiNFC" },
       { property: "og:description", content: "Faturamento, lucro, meta do mês, valores a receber e próximos contatos das suas vendas de placas NFC." },

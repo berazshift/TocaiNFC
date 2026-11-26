@@ -11,7 +11,6 @@ import { saveGoal, useData, type State } from "@/lib/store";
 export const Route = createFileRoute("/metas")({
   head: () => ({
     meta: [
-      { title: "Metas — TocaiNFC" },
       { name: "description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },
       { property: "og:title", content: "Metas — TocaiNFC" },
       { property: "og:description", content: "Defina a meta de faturamento e de placas do mês e veja quanto falta e o ritmo diário para chegar lá." },

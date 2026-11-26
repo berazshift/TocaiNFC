@@ -14,7 +14,6 @@ import { EMPTY, normalize, replaceAll, saveSettings, useData, type Settings, typ
 export const Route = createFileRoute("/configuracoes")({
   head: () => ({
     meta: [
-      { title: "Configurações — TocaiNFC" },
       { name: "description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },
       { property: "og:title", content: "Configurações — TocaiNFC" },
       { property: "og:description", content: "Preço, custo e estoque da placa NFC, taxas, meta padrão e cópia de segurança dos seus dados." },

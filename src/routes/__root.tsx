@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "TocaiNFC — Gestão de vendas de placas NFC" },
+      { title: "TocaiNFC" },
       { name: "description", content: "Painel do vendedor de placas NFC: vendas, clientes, metas, custos e lucro em um só lugar." },
       { name: "author", content: "TocaiNFC" },
       { name: "theme-color", content: "#0B1B3A" },

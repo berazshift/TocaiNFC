@@ -15,7 +15,6 @@ const DESCRIPTION = "Simule quantas placas NFC vender, a que preço, e veja o fa
 export const Route = createFileRoute("/simulador")({
   head: () => ({
     meta: [
-      { title: "Simulador de vendas — TocaiNFC" },
       { name: "description", content: DESCRIPTION },
       { property: "og:title", content: "Simulador de vendas — TocaiNFC" },
       { property: "og:description", content: DESCRIPTION },
