@@ -12,9 +12,9 @@ import { removeItem, saveItem, saveStockPurchase, uid, useData, type Cost, type 
 
 export const Route = createFileRoute("/custos")({
   head: () => ({ meta: [
-    { title: "Custos — NFC Sales Hub" },
+    { title: "Custos — TocaiNFC" },
     { name: "description", content: "Controle despesas, compras de placas, lucro e fluxo de caixa." },
-    { property: "og:title", content: "Custos — NFC Sales Hub" },
+    { property: "og:title", content: "Custos — TocaiNFC" },
     { property: "og:description", content: "Controle despesas, compras de placas, lucro e fluxo de caixa." },
   ] }),
   component: CostsPage,
