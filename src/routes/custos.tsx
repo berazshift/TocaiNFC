@@ -131,6 +131,13 @@ function CostsPage() {
                 </tbody>
               </table>
             </div>
+
+              <div className="grid gap-3 p-3 md:hidden">
+                {rows.map((c) => <article key={c.id} className="rounded-xl border border-border/80 bg-card p-3">
+                  <div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm font-semibold">{c.description}</p><p className="mt-1 text-xs text-muted-foreground">{dateLabel(c.date)} · {c.category}</p></div><strong className="num shrink-0 text-sm">{brl(c.amount)}</strong></div>
+                  <div className="mt-2 flex justify-end gap-1 border-t pt-2"><Button variant="ghost" size="sm" onClick={() => setForm(c)}><Pencil /> Editar</Button><ConfirmDelete what="este custo" onConfirm={() => removeItem("costs", c.id)} /></div>
+                </article>)}
+              </div>
           )}
         </div>
       </div>
