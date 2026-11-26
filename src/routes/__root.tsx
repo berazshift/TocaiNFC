@@ -142,8 +142,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {standalone ? <Outlet /> : (
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      {standalone ? <Outlet /> : (
       <CloudSyncGate>
         <AppShell>
           <Outlet />
